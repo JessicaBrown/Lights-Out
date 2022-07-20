@@ -4,9 +4,7 @@ import "./Board.css";
 
 export const Board = ({ nrows = 5, ncols = 5, chanceLightStartsOn = 0.25 }) => {
 	const [board, setBoard] = useState();
-	const [hasWon, setHasWon] = useState(false);
-
-	// function createBoard() {
+	// const [hasWon, setHasWon] = useState();
 	const createBoard = () => {
 		let initialBoard = [];
 		for (let y = 0; y < nrows; y++) {
@@ -36,23 +34,14 @@ export const Board = ({ nrows = 5, ncols = 5, chanceLightStartsOn = 0.25 }) => {
 			flipCell(y, x + 1, boardCopy);
 			flipCell(y - 1, x, boardCopy);
 			flipCell(y + 1, x, boardCopy);
-			let winner = boardCopy.map(
-				(d) => console.log(!d.includes(true))
-				// !d.includes(true) ? setHasWon(true) : setHasWon(false)
-			);
 
-			console.log(
-				winner,
-				boardCopy.map((d) => !d.includes(true))
-			);
 			return boardCopy;
 		});
 	};
-	//	console.log(hasWon);
-	// if (hasWon) {
-	// 	return <div className="animate-charcter">You Win!</div>;
-	// }
 
+	 const hasWon = board && board.every((row) => row.every((cell) => !cell));
+    //  setHasWon(hasWon)
+	//setHasWon(board && board.every((row) => row.every((cell) => !cell)));
 	let tblBoard = [];
 
 	for (let y = 0; y < nrows; y++) {
@@ -69,20 +58,27 @@ export const Board = ({ nrows = 5, ncols = 5, chanceLightStartsOn = 0.25 }) => {
 		}
 		tblBoard.push(<tr key={y}>{row}</tr>);
 	}
+
 	useEffect(() => {
 		createBoard();
-		// console.log(board);
-		// hasWon();
 	}, []);
+
 	return (
 		<div>
 			<div className="Board-title">
 				<div className="neon-orange">Lights</div>
 				<div className="neon-blue">Out</div>
 			</div>
-			<table className="Board">
-				<tbody>{tblBoard}</tbody>
-			</table>
+			{hasWon ? (
+				<div className="winner">
+					<span className="neon-orange">YOU</span>
+					<span className="neon-blue">WIN!</span>
+				</div>
+			) : (
+				<table className="Board">
+					<tbody>{tblBoard}</tbody>
+				</table>
+			)}
 		</div>
 	);
 };
